@@ -284,7 +284,7 @@ const PopUpForm: React.FC<IPopUpFormProps> = ({ onClose }) => {
                   name="target"
                   value={value}
                 >
-                  Платёж
+                  {value === "time" ? "Время" : "Платёж"}
                 </Tag>
               </TagWrapper>
             ))}
