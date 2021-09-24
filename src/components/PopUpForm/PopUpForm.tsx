@@ -1,11 +1,12 @@
-import React, { useState } from "react"
-import Input from "../UI/Input/Input"
-import TextButton from "../UI/Buttons/TextButton/TextButton"
-import Button from "../UI/Buttons/Button/Button"
-import styled from "styled-components"
+import React, { useEffect, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
+import styled from "styled-components"
+
 import Tag from "../UI/Tag/Tag"
+import Input from "../UI/Input/Input"
 import CheckBox from "../UI/CheckBox/CheckBox"
+import Button from "../UI/Buttons/Button/Button"
+import TextButton from "../UI/Buttons/TextButton/TextButton"
 
 const StyledForm = styled.form`
   display: flex;
@@ -13,6 +14,7 @@ const StyledForm = styled.form`
   flex-grow: 1;
   height: 100%;
 `
+
 const InputWrapper = styled.div`
   padding: 0 16px 8px;
 
@@ -20,81 +22,83 @@ const InputWrapper = styled.div`
     padding: 0 32px 8px;
   }
 `
+
 const TextButtonWrapper = styled.div`
   padding: 0 16px 16px;
+
   @media (min-width: 768px) {
     padding: 0 32px 16px;
   }
 `
+
 const TagBarWrapper = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 16px 24px;
+
   @media (min-width: 768px) {
     flex-direction: row;
     align-items: center;
     padding: 0 32px 40px;
   }
 `
+
 const TagBarTitle = styled.h6`
+  margin: 0 32px 0 0;
+  padding-bottom: 24px;
   font-size: 14px;
   line-height: 171%;
   font-weight: 500;
-  margin: 0 32px 0 0;
-  padding-bottom: 24px;
+
   @media (min-width: 768px) {
     padding: 12px 0;
   }
 `
+
 const TagsRow = styled.div`
   display: flex;
 `
+
 const TagWrapper = styled.div`
   margin-right: 8px;
+
   @media (min-width: 768px) {
     margin-right: 16px;
   }
 `
+
 const SubmitButtonWrapper = styled.div`
   flex: 0 0 auto;
   padding: 0 16px 16px;
+
   @media (min-width: 768px) {
     padding: 0 32px 32px;
   }
 `
+
 const CheckBoxBlockTitle = styled.div`
   padding-top: 4px;
 `
+
 const CheckBoxBlock = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 16px 24px;
+
   @media (min-width: 768px) {
     padding: 0 32px 16px;
   }
 `
-const CheckBoxBlockLine = styled.div`
-  padding: 16px 0;
-  border-bottom: 1px solid ${(props) => props.theme.gray800};
-`
-const CheckBoxTitle = styled.div`
-  display: inline-block;
-  margin-left: 11px;
-`
-const CheckBoxMainText = styled.span`
-  font-size: 14px;
-  line-height: 171%;
-`
-const CheckBoxSubText = styled.span`
-  font-size: 14px;
-  line-height: 171%;
-  color: ${(props) => props.theme.gray900};
-`
+
 const MediaMain = styled.div`
   @media (max-width: 768px) {
     flex: 1 0 auto;
   }
 `
+
+interface IPopUpFormProps {
+  onClose: () => void
+}
 
 type CheckBoxField = {
   checked: boolean
@@ -108,10 +112,19 @@ type FormData = {
   target: string
 }
 
-const PopUpForm: React.FC = () => {
+const PopUpForm: React.FC<IPopUpFormProps> = ({ onClose }) => {
   const [payments, setPayments] = useState<CheckBoxField[]>([])
   const [calculated, setCalculated] = useState(false)
 
+  // Arr for tags render
+  const tags: string[] = ["time", "payment"]
+
+  // Use Form Hook
+  const defaultValues = {
+    clientSalary: "",
+    taxSelected: [],
+    target: "",
+  }
   const {
     control,
     handleSubmit,
@@ -122,20 +135,24 @@ const PopUpForm: React.FC = () => {
     formState: { isValid, isValidating, isSubmitting },
   } = useForm<FormData>({
     mode: "all",
-    defaultValues: {
-      clientSalary: "",
-      taxSelected: [],
-      target: "",
-    },
+    defaultValues,
   })
-  // Input Calculation
+
+  // CheckBox reset on input change
+  const watchInput = watch("clientSalary")
+  useEffect(() => {
+    setCalculated(false)
+    setPayments([])
+  }, [watchInput])
+
+  // Input to Checkboxes Calculation
   const calculateInput = () => {
     if (isValid) {
       const MAX_PAYMENT = 260000
 
       // Example property cost
-      const EXAMPLE1 = 2_500_000
-      const EXAMPLE2 = 1_000_000
+      const EXAMPLE1 = 2500000
+      // const EXAMPLE2 = 1000000
       let totalPayment = EXAMPLE1 * 0.13
       totalPayment = totalPayment >= MAX_PAYMENT ? MAX_PAYMENT : totalPayment
 
@@ -160,12 +177,14 @@ const PopUpForm: React.FC = () => {
             checked: false,
           })
       }
-
       setPayments(paymentsArray)
       setCalculated(true)
-    }
-    else {
-      setError("clientSalary", {type: "required", message: "Сначала нужно ввести данные" }, {shouldFocus: true})
+    } else {
+      setError(
+        "clientSalary",
+        { type: "required", message: "Сначала нужно ввести данные" },
+        { shouldFocus: true }
+      )
     }
   }
 
@@ -181,15 +200,15 @@ const PopUpForm: React.FC = () => {
 
     // Set only checked to form
     const toForm = newPayments.filter((payment) => payment.checked)
-
     setValue("taxSelected", toForm)
   }
 
   // Form submit
   const onSubmit = (data: FormData) => {
     console.log(data)
-    alert(JSON.stringify(data, null, 1))
+    alert(JSON.stringify(data, null, 5))
     // dispatch()
+    onClose()
   }
 
   return (
@@ -199,7 +218,7 @@ const PopUpForm: React.FC = () => {
           <Controller
             render={({
               field: { onChange, onBlur, value, name },
-              fieldState: { invalid, isTouched, isDirty, error },
+              fieldState: { invalid, error },
             }) => (
               <Input
                 title="Ваша зарплата в месяц"
@@ -208,8 +227,6 @@ const PopUpForm: React.FC = () => {
                 value={value}
                 name={name}
                 invalid={invalid}
-                isDirty={isDirty}
-                isTouched={isTouched}
                 error={error}
               />
             )}
@@ -242,24 +259,14 @@ const PopUpForm: React.FC = () => {
 
             {payments?.map((payment) => {
               return (
-                <CheckBoxBlockLine key={payment.year}>
-                  <CheckBox
-                    value={payment.year}
-                    name={`${payment.value}_${payment.year}`}
-                    checked={payment.checked}
-                    onChange={checkBoxHandler}
-                  />
-                  <CheckBoxTitle>
-                    <CheckBoxMainText>
-                      {payment.value
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                      }
-                      &nbsp;рублей&nbsp;
-                    </CheckBoxMainText>
-                    <CheckBoxSubText>в {payment.year}-йы год</CheckBoxSubText>
-                  </CheckBoxTitle>
-                </CheckBoxBlockLine>
+                <CheckBox
+                  key={payment.year}
+                  value={payment.year}
+                  name={`${payment.value}_${payment.year}`}
+                  checked={payment.checked}
+                  title={payment.value}
+                  onChange={checkBoxHandler}
+                />
               )
             })}
           </CheckBoxBlock>
@@ -268,16 +275,19 @@ const PopUpForm: React.FC = () => {
         <TagBarWrapper>
           <TagBarTitle>Что уменьшаем</TagBarTitle>
           <TagsRow>
-            <TagWrapper>
-              <Tag onChange={(e) => {setValue("target", e.target.value)}} name="target" value="payment">
-                Платёж
-              </Tag>
-            </TagWrapper>
-            <TagWrapper>
-              <Tag onChange={(e) => setValue("target", e.target.value)} name="target" value="time">
-                Срок
-              </Tag>
-            </TagWrapper>
+            {tags.map((value) => (
+              <TagWrapper key={value}>
+                <Tag
+                  onChange={(e) => {
+                    setValue("target", e.target.value)
+                  }}
+                  name="target"
+                  value={value}
+                >
+                  Платёж
+                </Tag>
+              </TagWrapper>
+            ))}
           </TagsRow>
         </TagBarWrapper>
       </MediaMain>

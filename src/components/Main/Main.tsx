@@ -1,31 +1,30 @@
-import * as React from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
+
 import Button from "../UI/Buttons/Button/Button"
-import { useState } from "react"
 import PopUp from "../PopUp/PopUp"
 
 const StyledMain = styled.main`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 100%;
   background: ${(props) => props.theme.redGrad};
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `
+
 const ButtonWrapper = styled.div`
   min-width: 149px;
+
   @media (min-width: 768px) {
     min-width: 198px;
   }
 `
 
 const Main: React.FC = () => {
-  type isOpen = boolean
-  const [showPopUp, setShowPopUp] = useState<isOpen>(false)
+  const [showPopUp, setShowPopUp] = useState<boolean>(false)
 
-  const togglePopUp = (e: React.MouseEvent) => {
-    e.stopPropagation()
+  const togglePopUp = () => {
     setShowPopUp(!showPopUp)
   }
 
@@ -37,12 +36,10 @@ const Main: React.FC = () => {
           onClick={togglePopUp}
           size="big"
           color="alternative"
-          disabled={false}
           type="button"
         />
       </ButtonWrapper>
-
-        <PopUp isOpen={showPopUp} onClose={togglePopUp} />
+      <PopUp isOpen={showPopUp} onClose={togglePopUp} />
     </StyledMain>
   )
 }

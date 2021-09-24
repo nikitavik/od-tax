@@ -1,16 +1,16 @@
-import * as React from "react"
+import React from "react"
 import styled from "styled-components"
+
 import PopUpForm from "../PopUpForm/PopUpForm"
 
 interface IPopUpProps {
   isOpen: boolean
-  onClose: (e: React.MouseEvent) => void
+  onClose: () => void
 }
 
 const PopUpOverlay = styled.div`
-  z-index: 1000;
-
   position: fixed;
+  z-index: 500;
   top: 0;
   left: 0;
   width: 100%;
@@ -20,23 +20,23 @@ const PopUpOverlay = styled.div`
 `
 
 const StyledPopUp = styled.div`
-  z-index: 1010;
   position: relative;
-  
-
+  z-index: 2000;
   margin: 0 auto;
-
   background: #fff;
+
   @media (max-width: 768px) {
     display: flex;
     flex-direction: column;
     min-height: 100%;
   }
+
   @media (min-width: 768px) {
     max-width: 453px;
     border-radius: 30px;
     margin: 120px auto;
   }
+
   @media (min-width: 1440px) {
     max-width: 552px;
   }
@@ -50,35 +50,33 @@ const PopUpTitle = styled.h3`
   line-height: 133%;
 
   @media (min-width: 768px) {
+    padding: 32px 32px 16px;
     font-size: 28px;
     line-height: 143%;
-
-    padding: 32px 32px 16px;
   }
 `
 
 const PopUpSubtitle = styled.div`
+  padding: 0 16px 24px;
   font-size: 12px;
   line-height: 133%;
 
-  padding: 0 16px 24px;
-
   @media (min-width: 768px) {
+    padding: 0 32px 24px;
     font-size: 14px;
     line-height: 171%;
-
-    padding: 0 32px 24px;
   }
 `
 
 const CloseCross = styled.div`
   position: absolute;
-  background-image: ${(props) => props.theme.smallRedCross};
   height: 12px;
   width: 12px;
   top: 22px;
   right: 22px;
+  background-image: ${(props) => props.theme.smallRedCross};
   cursor: pointer;
+
   @media (min-width: 768px) {
     height: 18px;
     width: 18px;
@@ -99,7 +97,7 @@ const PopUp: React.FC<IPopUpProps> = ({ isOpen, onClose }) => {
           налогового вычета составляет не более 13% от своего официального
           годового дохода.
         </PopUpSubtitle>
-        <PopUpForm />
+        <PopUpForm onClose={onClose} />
       </StyledPopUp>
     </PopUpOverlay>
   ) : null
