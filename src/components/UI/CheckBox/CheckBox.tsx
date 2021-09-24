@@ -64,6 +64,20 @@ const CheckBoxSubText = styled.span`
   color: ${(props) => props.theme.gray900};
 `
 
+////// Calculate word ending
+function wordEnd(value: number): string {
+  let wordEnd
+  const lChr = value.toString().slice(-1)
+  if (value === 12 || value === 16 || value === 17) {
+    wordEnd = "ый"
+  } else if (lChr === "3" && value !== 13) {
+    wordEnd = "ий"
+  } else if (lChr === "2" || lChr === "6" || lChr === "7" || lChr === "8") {
+    wordEnd = "ой"
+  } else wordEnd = "ый"
+  return wordEnd
+}
+
 interface ICheckBoxProps {
   value: number
   name: string
@@ -107,17 +121,3 @@ const CheckBox: React.FC<ICheckBoxProps> = ({
 }
 
 export default CheckBox
-
-////// Calculate word ending
-function wordEnd(value: number): string {
-  let wordEnd
-  const lChr = value.toString().slice(-1)
-  if (value === 12 || value === 16 || value === 17) {
-    wordEnd = "ый"
-  } else if (lChr === "3" && value !== 13) {
-    wordEnd = "ий"
-  } else if (lChr === "2" || lChr === "6" || lChr === "7" || lChr === "8") {
-    wordEnd = "ой"
-  } else wordEnd = "ый"
-  return wordEnd
-}
