@@ -104,6 +104,7 @@ type FormData = {
 
 const PopUpForm: React.FC = () => {
   const [payments, setPayments] = useState<CheckBoxField[]>([])
+  const [target, setTarget] = useState("")
   const [calculated, setCalculated] = useState(false)
   const popUpContext = useContext(PopUpContext)
 
@@ -190,7 +191,8 @@ const PopUpForm: React.FC = () => {
 
   // Radio button handler
   const tagClickHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue("target", e.target.value)
+    setTarget(e.target.value)
+    setValue("target", target)
   }
 
   return (
@@ -282,9 +284,10 @@ const PopUpForm: React.FC = () => {
           disabled={
             isSubmitting ||
             !isValid ||
+            !getValues("taxSelected").length ||
             isValidating ||
             !calculated ||
-            getValues("taxSelected").length === 0
+            !target
           }
         />
       </SubmitButtonWrapper>
