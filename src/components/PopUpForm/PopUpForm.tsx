@@ -143,13 +143,13 @@ const PopUpForm: React.FC = () => {
         if (year === yearsToPay - 1) {
           paymentsArray.push({
             year: year + 1,
-            value: totalPayment - taxDeductionOfSalary * (yearsToPay - 1),
+            value: Math.round(totalPayment - taxDeductionOfSalary * (yearsToPay - 1)),
             checked: false,
           })
         } else
           paymentsArray.push({
             year: year + 1,
-            value: taxDeductionOfSalary,
+            value: Math.round(taxDeductionOfSalary),
             checked: false,
           })
       }
@@ -212,11 +212,11 @@ const PopUpForm: React.FC = () => {
           control={control}
           rules={{
             required: "Это поле обязательное",
-            minLength: { value: 5, message: "Минимальная длинная 5 символов" },
             validate: (value: string) => {
               const myRegExp = /^[1-9]\d*$/
               return myRegExp.test(value) || "Введите пожалуйста целое число"
             },
+            minLength: { value: 5, message: "Минимальная длинна 5 символов" },
           }}
         />
       </InputWrapper>
@@ -242,7 +242,7 @@ const PopUpForm: React.FC = () => {
                 />
                 <CheckBoxTitle>
                   <CheckBoxMainText>
-                    {payment.value} рублей&nbsp;
+                    {payment.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")} рублей&nbsp;
                   </CheckBoxMainText>
                   <CheckBoxSubText>в {payment.year}-йы год</CheckBoxSubText>
                 </CheckBoxTitle>

@@ -13,6 +13,7 @@ const StyledInput = styled.input`
   font-size: 14px;
   line-height: 171%;
 
+  background-color: #fff;
   color: #000;
   border: 1px solid ${(props) => props.theme.gray800};
   border-radius: 3px;
