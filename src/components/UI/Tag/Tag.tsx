@@ -5,6 +5,7 @@ const TagContainer = styled.label`
     display: block;
     width: 100%;
     height: 100%;
+    cursor: pointer;
 `
 const HiddenRadio = styled.input.attrs({type: 'radio'})`
   border: 0;
@@ -17,6 +18,7 @@ const HiddenRadio = styled.input.attrs({type: 'radio'})`
   position: absolute;
   white-space: nowrap;
   width: 1px;
+
   &:checked + div {
     color: #fff;
     background: ${props => props.theme.redGrad};
@@ -34,18 +36,21 @@ const StyledTag = styled.div`
   border-radius: 50px;
   border: none;
   outline: none;
+  transition: all 0.2s ease-in-out;
+
   &:hover{
     background-color: ${props => props.theme.gray800};
+    
   }
 `
 
-interface TagProps {
+interface ITagProps {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
     name: string,
     value: string
 }
 
-const Tag: React.FC<TagProps> = ({ children , onChange, name,value}) => {
+const Tag: React.FC<ITagProps> = ({ children , onChange, name,value}) => {
 
     return(
         <TagContainer>

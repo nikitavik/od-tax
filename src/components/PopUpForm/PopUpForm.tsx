@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useState } from "react"
 import Input from "../UI/Input/Input"
 import TextButton from "../UI/Buttons/TextButton/TextButton"
 import Button from "../UI/Buttons/Button/Button"
@@ -6,7 +6,6 @@ import styled from "styled-components"
 import { Controller, useForm } from "react-hook-form"
 import Tag from "../UI/Tag/Tag"
 import CheckBox from "../UI/CheckBox/CheckBox"
-import { PopUpContext } from "../Main/Main"
 
 const StyledForm = styled.form`
   display: flex;
@@ -111,14 +110,14 @@ type FormData = {
 
 const PopUpForm: React.FC = () => {
   const [payments, setPayments] = useState<CheckBoxField[]>([])
-  const [radioTouched, setRadioTouched] = useState(false)
   const [calculated, setCalculated] = useState(false)
-  const popUpContext = useContext(PopUpContext)
 
   const {
     control,
     handleSubmit,
     getValues,
+    setError,
+    watch,
     setValue,
     formState: { isValid, isValidating, isSubmitting },
   } = useForm<FormData>({
@@ -129,7 +128,6 @@ const PopUpForm: React.FC = () => {
       target: "",
     },
   })
-
   // Input Calculation
   const calculateInput = () => {
     if (isValid) {
@@ -166,6 +164,9 @@ const PopUpForm: React.FC = () => {
       setPayments(paymentsArray)
       setCalculated(true)
     }
+    else {
+      setError("clientSalary", {type: "required", message: "Сначала нужно ввести данные" }, {shouldFocus: true})
+    }
   }
 
   // Change payments state and write to form
@@ -180,6 +181,7 @@ const PopUpForm: React.FC = () => {
 
     // Set only checked to form
     const toForm = newPayments.filter((payment) => payment.checked)
+
     setValue("taxSelected", toForm)
   }
 
@@ -188,13 +190,6 @@ const PopUpForm: React.FC = () => {
     console.log(data)
     alert(JSON.stringify(data, null, 1))
     // dispatch()
-    popUpContext?.closePopUp()
-  }
-
-  // Radio button handler
-  const tagClickHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRadioTouched(true)
-    setValue("target", e.target.value)
   }
 
   return (
@@ -224,9 +219,9 @@ const PopUpForm: React.FC = () => {
               required: "Это поле обязательное",
               validate: (value: string) => {
                 const myRegExp = /^[1-9]\d*$/
-                return myRegExp.test(value) || "Введите пожалуйста целое число"
+                return myRegExp.test(value) || "Введите целое число"
               },
-              minLength: { value: 5, message: "Минимальная длинна 5 символов" },
+              minLength: { value: 5, message: "Минимальная длина 5 символов" },
             }}
           />
         </InputWrapper>
@@ -258,8 +253,9 @@ const PopUpForm: React.FC = () => {
                     <CheckBoxMainText>
                       {payment.value
                         .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}{" "}
-                      рублей&nbsp;
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                      }
+                      &nbsp;рублей&nbsp;
                     </CheckBoxMainText>
                     <CheckBoxSubText>в {payment.year}-йы год</CheckBoxSubText>
                   </CheckBoxTitle>
@@ -273,12 +269,12 @@ const PopUpForm: React.FC = () => {
           <TagBarTitle>Что уменьшаем</TagBarTitle>
           <TagsRow>
             <TagWrapper>
-              <Tag onChange={tagClickHandler} name="target" value="payment">
+              <Tag onChange={(e) => {setValue("target", e.target.value)}} name="target" value="payment">
                 Платёж
               </Tag>
             </TagWrapper>
             <TagWrapper>
-              <Tag onChange={tagClickHandler} name="target" value="time">
+              <Tag onChange={(e) => setValue("target", e.target.value)} name="target" value="time">
                 Срок
               </Tag>
             </TagWrapper>
@@ -290,15 +286,15 @@ const PopUpForm: React.FC = () => {
           type="submit"
           title="Добавить"
           onClick={() => null}
-          bSize={"small"}
-          altStyle={false}
+          size="small"
+          color="primary"
           disabled={
             isSubmitting ||
             !isValid ||
-            !getValues("taxSelected").length ||
+            !watch("taxSelected").length ||
             isValidating ||
             !calculated ||
-            !radioTouched
+            !watch("target")
           }
         />
       </SubmitButtonWrapper>

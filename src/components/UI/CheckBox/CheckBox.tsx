@@ -32,7 +32,7 @@ const StyledCheckBox = styled.div`
 
   background: #fff;
   box-sizing: border-box;
-
+  transition: all 0.2s ease-in-out;
   &:hover {
     border-color: #000;
   }
@@ -40,14 +40,14 @@ const StyledCheckBox = styled.div`
     background-image: ${(props) => props.theme.checkBoxGray};
   }
 `
-interface CheckBoxProps {
+interface ICheckBoxProps {
   value: number
   name: string
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   checked: boolean
 }
 
-const CheckBox: React.FC<CheckBoxProps> = ({
+const CheckBox: React.FC<ICheckBoxProps> = ({
   value,
   name,
   onChange,

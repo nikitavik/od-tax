@@ -18,6 +18,8 @@ const StyledInput = styled.input`
   border: 1px solid ${(props) => props.theme.gray800};
   border-radius: 3px;
   outline: none;
+  transition: all 0.2s ease-in-out;
+
   &::placeholder {
     color: ${(props) => props.theme.gray900};
   }
@@ -31,6 +33,7 @@ const StyledInput = styled.input`
     color: ${(props) => props.theme.grayText};
     border-color: ${(props) => props.theme.grayText};
   }
+  
   &.error {
     border-color: ${(props) => props.theme.red};
   }
@@ -59,7 +62,7 @@ const InputError = styled.p`
   }
 `
 
-interface InputProps {
+interface IInputProps {
   title: string
   name: string
   onChange: (value: never) => void
@@ -71,16 +74,14 @@ interface InputProps {
   error?: FieldError
 }
 
-const Input: React.FC<InputProps> = ({
+const Input: React.FC<IInputProps> = ({
   name,
   onChange,
   onBlur,
   value,
   invalid,
-  isTouched,
   error,
   title,
-  isDirty,
 }) => {
   return (
     <InputWrapper>
@@ -93,7 +94,7 @@ const Input: React.FC<InputProps> = ({
         value={value}
       />
 
-      {(isTouched || isDirty) && invalid ? (
+      {invalid ? (
         <InputError>{error?.message}</InputError>
       ) : (
         ""

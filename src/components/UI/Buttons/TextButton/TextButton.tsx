@@ -12,6 +12,7 @@ const StyledTextButton = styled.button`
   border: none;
   background-color: #fff;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
   &:hover {
     color: ${(props) => props.theme.orange};
   }
@@ -20,13 +21,13 @@ const StyledTextButton = styled.button`
   }
 `
 
-interface TextButtonProps {
+interface ITextButtonProps {
   title: string
-  onClick: React.MouseEventHandler<HTMLButtonElement>
-  type: "button" | "submit" | "reset"
+  onClick: () => void
+  type?: "button"
 }
 
-const TextButton: React.FC<TextButtonProps> = ({ title, onClick, type}) => {
+const TextButton: React.FC<ITextButtonProps> = ({ title, onClick, type}) => {
   return <StyledTextButton type={type} onClick={onClick}>{title}</StyledTextButton>
 }
 

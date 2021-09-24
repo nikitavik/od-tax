@@ -1,11 +1,10 @@
 import * as React from "react"
 import styled from "styled-components"
 import PopUpForm from "../PopUpForm/PopUpForm"
-import { useContext } from 'react'
-import { PopUpContext } from '../Main/Main'
 
-interface PopUpProps {
+interface IPopUpProps {
   isOpen: boolean
+  onClose: (e: React.MouseEvent) => void
 }
 
 const PopUpOverlay = styled.div`
@@ -16,7 +15,7 @@ const PopUpOverlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  overflow: scroll;
+  overflow-y: auto;
   background: ${(props) => props.theme.dark30};
 `
 
@@ -89,12 +88,11 @@ const CloseCross = styled.div`
   }
 `
 
-const PopUp: React.FC<PopUpProps> = ({ isOpen }) => {
-  const popUpContext = useContext(PopUpContext)
+const PopUp: React.FC<IPopUpProps> = ({ isOpen, onClose }) => {
   return isOpen ? (
     <PopUpOverlay>
       <StyledPopUp>
-        <CloseCross onClick={popUpContext?.closePopUp} />
+        <CloseCross onClick={onClose} />
         <PopUpTitle>Налоговый вычет</PopUpTitle>
         <PopUpSubtitle>
           Используйте налоговый вычет чтобы погасить ипотеку досрочно. Размер

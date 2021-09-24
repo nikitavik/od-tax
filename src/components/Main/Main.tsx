@@ -20,21 +20,13 @@ const ButtonWrapper = styled.div`
   }
 `
 
-interface PopUpContextInterface{
-  closePopUp:() => void
-}
-
-export const PopUpContext = React.createContext<PopUpContextInterface | null>(null)
-
 const Main: React.FC = () => {
   type isOpen = boolean
-  const [isPopUpOpen, setPopUpOpen] = useState<isOpen>(false)
+  const [showPopUp, setShowPopUp] = useState<isOpen>(false)
 
-  const openPopUpHandler = () => {
-    setPopUpOpen(true)
-  }
-  const closePopUpHandler = () => {
-    setPopUpOpen(false)
+  const togglePopUp = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setShowPopUp(!showPopUp)
   }
 
   return (
@@ -42,21 +34,16 @@ const Main: React.FC = () => {
       <ButtonWrapper>
         <Button
           title="Налоговый вычет"
-          onClick={openPopUpHandler}
-          bSize="big"
-          altStyle={true}
+          onClick={togglePopUp}
+          size="big"
+          color="alternative"
           disabled={false}
           type="button"
         />
       </ButtonWrapper>
 
-      <PopUpContext.Provider value={{
-          closePopUp: closePopUpHandler,
-      }}>
-        <PopUp isOpen={isPopUpOpen}/>
-      </PopUpContext.Provider>
+        <PopUp isOpen={showPopUp} onClose={togglePopUp} />
     </StyledMain>
   )
 }
-
 export default Main

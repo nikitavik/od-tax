@@ -1,60 +1,50 @@
 import * as React from "react"
 import styled from "styled-components"
 
-interface ButtonProps {
-  type: "submit" | "button" | "reset"
+interface IButtonProps {
+  type?: string
   title: string
-  onClick: React.MouseEventHandler<HTMLButtonElement>
-  bSize: "small" | "big"
-  altStyle: boolean
-  disabled: boolean
+  onClick: (e: React.MouseEvent) => void
+  size: "small" | "big",
+  color: "primary" | "alternative"
+  disabled?: boolean
 }
 
 const StyledRedButton = styled.button.attrs<
-  { bSize: string },
+  { size: string, color: string},
   {
-    padding: string
-    fontSize: string
-    lineHeight: string
+    small: boolean
+    primary: boolean
   }
->(({ bSize }) => ({
-  padding: bSize === "small" ? `12px` : "16px",
-  fontSize: bSize === "small" ? "14px" : "16px",
-  lineHeight: bSize === "small" ? "133%" : "150%",
-}))<{ bSize: string }>`
+>(({ size,color }) => ({
+  small: size === "small",
+  primary: color === "primary"
+}))<{ size: string, color: string}>`
   width: 100%;
-  padding: ${(props) => props.padding};
-
-  font-size: ${(props) => props.fontSize};
-  line-height: ${(props) => props.lineHeight};
+  padding: ${(props) => props.small ? "12px" : "16px"};
+  font-size: ${(props) => props.small ? "14px" : "16px"};
+  line-height: ${(props) => props.small ? "133%": "150%"};
   font-weight: 500;
   white-space: nowrap;
 
   color: #fff;
-  background: ${(props) => props.theme.redGrad};
+  background: ${(props) => props.primary ? props.theme.redGrad : "transparent"};
   border-radius: 6px;
-  box-shadow: ${(props) => props.theme.mainShadow};
+  box-shadow: ${(props) => props.primary ? props.theme.mainShadow : "none"};
   outline: none;
-  border: none;
+  border: ${props => props.primary ? "none" : "1px solid #fff"};
   cursor: pointer;
+  
+  transition: all .2s ease-in-out;
   &:hover {
-    background: ${(props) => props.theme.red};
+    background: ${(props) => props.primary ? props.theme.red : "#fff"};
+    color: ${props => props.primary ? "" : "#000"};
   }
+  
   &:disabled {
     background: ${(props) => props.theme.gray900};
     box-shadow: none;
-  }
-  &.alternative {
-    border: 1px solid #fff;
-    background: transparent;
-    box-shadow: none;
-    &:hover {
-      color: #000;
-      background: #fff;
-    }
-    &:disabled {
-      border: none;
-    }
+    border: ${props => props.primary ? "" : "none"}
   }
   @media (min-width: 768px) {
     font-size: 16px;
@@ -62,19 +52,19 @@ const StyledRedButton = styled.button.attrs<
   }
 `
 
-const Button: React.FC<ButtonProps> = ({
+const Button: React.FC<IButtonProps> = ({
   title,
   disabled,
-  bSize,
-  altStyle,
+  size,
+  color,
   onClick,
 }) => {
   return (
     <StyledRedButton
       disabled={disabled}
       onClick={onClick}
-      bSize={bSize}
-      className={altStyle ? "alternative" : ""}
+      size={size}
+      color={color}
     >
       {title}
     </StyledRedButton>
