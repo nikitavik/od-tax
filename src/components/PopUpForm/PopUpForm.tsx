@@ -11,6 +11,7 @@ import { PopUpContext } from "../Main/Main"
 const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
   height: 100%;
 `
 const InputWrapper = styled.div`
@@ -56,6 +57,7 @@ const TagWrapper = styled.div`
   }
 `
 const SubmitButtonWrapper = styled.div`
+  flex: 0 0 auto;
   padding: 0 16px 16px;
   @media (min-width: 768px) {
     padding: 0 32px 32px;
@@ -88,6 +90,11 @@ const CheckBoxSubText = styled.span`
   font-size: 14px;
   line-height: 171%;
   color: ${(props) => props.theme.gray900};
+`
+const MediaMain = styled.div`
+  @media (max-width: 768px) {
+    flex: 1 0 auto;
+  }
 `
 
 type CheckBoxField = {
@@ -143,7 +150,9 @@ const PopUpForm: React.FC = () => {
         if (year === yearsToPay - 1) {
           paymentsArray.push({
             year: year + 1,
-            value: Math.round(totalPayment - taxDeductionOfSalary * (yearsToPay - 1)),
+            value: Math.round(
+              totalPayment - taxDeductionOfSalary * (yearsToPay - 1)
+            ),
             checked: false,
           })
         } else
@@ -190,84 +199,92 @@ const PopUpForm: React.FC = () => {
 
   return (
     <StyledForm onSubmit={handleSubmit(onSubmit)}>
-      <InputWrapper>
-        <Controller
-          render={({
-            field: { onChange, onBlur, value, name },
-            fieldState: { invalid, isTouched, isDirty, error },
-          }) => (
-            <Input
-              title="Ваша зарплата в месяц"
-              onChange={onChange}
-              onBlur={onBlur}
-              value={value}
-              name={name}
-              invalid={invalid}
-              isDirty={isDirty}
-              isTouched={isTouched}
-              error={error}
-            />
-          )}
-          name="clientSalary"
-          control={control}
-          rules={{
-            required: "Это поле обязательное",
-            validate: (value: string) => {
-              const myRegExp = /^[1-9]\d*$/
-              return myRegExp.test(value) || "Введите пожалуйста целое число"
-            },
-            minLength: { value: 5, message: "Минимальная длинна 5 символов" },
-          }}
-        />
-      </InputWrapper>
+      <MediaMain>
+        <InputWrapper>
+          <Controller
+            render={({
+              field: { onChange, onBlur, value, name },
+              fieldState: { invalid, isTouched, isDirty, error },
+            }) => (
+              <Input
+                title="Ваша зарплата в месяц"
+                onChange={onChange}
+                onBlur={onBlur}
+                value={value}
+                name={name}
+                invalid={invalid}
+                isDirty={isDirty}
+                isTouched={isTouched}
+                error={error}
+              />
+            )}
+            name="clientSalary"
+            control={control}
+            rules={{
+              required: "Это поле обязательное",
+              validate: (value: string) => {
+                const myRegExp = /^[1-9]\d*$/
+                return myRegExp.test(value) || "Введите пожалуйста целое число"
+              },
+              minLength: { value: 5, message: "Минимальная длинна 5 символов" },
+            }}
+          />
+        </InputWrapper>
 
-      <TextButtonWrapper>
-        <TextButton type="button" title="Рассчитать" onClick={calculateInput} />
-      </TextButtonWrapper>
+        <TextButtonWrapper>
+          <TextButton
+            type="button"
+            title="Рассчитать"
+            onClick={calculateInput}
+          />
+        </TextButtonWrapper>
 
-      {payments ? (
-        <CheckBoxBlock>
-          <CheckBoxBlockTitle>
-            Итого можете внести в качестве досрочных:
-          </CheckBoxBlockTitle>
+        {payments ? (
+          <CheckBoxBlock>
+            <CheckBoxBlockTitle>
+              Итого можете внести в качестве досрочных:
+            </CheckBoxBlockTitle>
 
-          {payments?.map((payment) => {
-            return (
-              <CheckBoxBlockLine key={payment.year}>
-                <CheckBox
-                  value={payment.year}
-                  name={`${payment.value}_${payment.year}`}
-                  checked={payment.checked}
-                  onChange={checkBoxHandler}
-                />
-                <CheckBoxTitle>
-                  <CheckBoxMainText>
-                    {payment.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")} рублей&nbsp;
-                  </CheckBoxMainText>
-                  <CheckBoxSubText>в {payment.year}-йы год</CheckBoxSubText>
-                </CheckBoxTitle>
-              </CheckBoxBlockLine>
-            )
-          })}
-        </CheckBoxBlock>
-      ) : null}
+            {payments?.map((payment) => {
+              return (
+                <CheckBoxBlockLine key={payment.year}>
+                  <CheckBox
+                    value={payment.year}
+                    name={`${payment.value}_${payment.year}`}
+                    checked={payment.checked}
+                    onChange={checkBoxHandler}
+                  />
+                  <CheckBoxTitle>
+                    <CheckBoxMainText>
+                      {payment.value
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}{" "}
+                      рублей&nbsp;
+                    </CheckBoxMainText>
+                    <CheckBoxSubText>в {payment.year}-йы год</CheckBoxSubText>
+                  </CheckBoxTitle>
+                </CheckBoxBlockLine>
+              )
+            })}
+          </CheckBoxBlock>
+        ) : null}
 
-      <TagBarWrapper>
-        <TagBarTitle>Что уменьшаем</TagBarTitle>
-        <TagsRow>
-          <TagWrapper>
-            <Tag onChange={tagClickHandler} name="target" value="payment">
-              Платёж
-            </Tag>
-          </TagWrapper>
-          <TagWrapper>
-            <Tag onChange={tagClickHandler} name="target" value="time">
-              Срок
-            </Tag>
-          </TagWrapper>
-        </TagsRow>
-      </TagBarWrapper>
-
+        <TagBarWrapper>
+          <TagBarTitle>Что уменьшаем</TagBarTitle>
+          <TagsRow>
+            <TagWrapper>
+              <Tag onChange={tagClickHandler} name="target" value="payment">
+                Платёж
+              </Tag>
+            </TagWrapper>
+            <TagWrapper>
+              <Tag onChange={tagClickHandler} name="target" value="time">
+                Срок
+              </Tag>
+            </TagWrapper>
+          </TagsRow>
+        </TagBarWrapper>
+      </MediaMain>
       <SubmitButtonWrapper>
         <Button
           type="submit"

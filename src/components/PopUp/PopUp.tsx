@@ -23,11 +23,14 @@ const PopUpOverlay = styled.div`
 const StyledPopUp = styled.div`
   z-index: 1010;
   position: relative;
+  
 
   margin: 0 auto;
 
   background: #fff;
   @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
     min-height: 100%;
   }
   @media (min-width: 768px) {
