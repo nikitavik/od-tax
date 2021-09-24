@@ -104,7 +104,7 @@ type FormData = {
 
 const PopUpForm: React.FC = () => {
   const [payments, setPayments] = useState<CheckBoxField[]>([])
-  const [target, setTarget] = useState("")
+  const [radioTouched, setRadioTouched] = useState(false)
   const [calculated, setCalculated] = useState(false)
   const popUpContext = useContext(PopUpContext)
 
@@ -123,6 +123,7 @@ const PopUpForm: React.FC = () => {
     },
   })
 
+  // Input Calculation
   const calculateInput = () => {
     if (isValid) {
       const MAX_PAYMENT = 260000
@@ -155,14 +156,6 @@ const PopUpForm: React.FC = () => {
 
       setPayments(paymentsArray)
       setCalculated(true)
-
-      console.log(
-        "valid",
-        totalPayment,
-        taxDeductionOfSalary,
-        yearsToPay,
-        paymentsArray
-      )
     }
   }
 
@@ -191,8 +184,8 @@ const PopUpForm: React.FC = () => {
 
   // Radio button handler
   const tagClickHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTarget(e.target.value)
-    setValue("target", target)
+    setRadioTouched(true)
+    setValue("target", e.target.value)
   }
 
   return (
@@ -231,6 +224,7 @@ const PopUpForm: React.FC = () => {
       <TextButtonWrapper>
         <TextButton type="button" title="Рассчитать" onClick={calculateInput} />
       </TextButtonWrapper>
+
       {payments ? (
         <CheckBoxBlock>
           <CheckBoxBlockTitle>
@@ -287,7 +281,7 @@ const PopUpForm: React.FC = () => {
             !getValues("taxSelected").length ||
             isValidating ||
             !calculated ||
-            !target
+            !radioTouched
           }
         />
       </SubmitButtonWrapper>
