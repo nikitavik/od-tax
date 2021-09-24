@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/od-tax/static/css/main.e6607ef6.chunk.css",
-    "main.js": "/od-tax/static/js/main.c9c588cf.chunk.js",
-    "main.js.map": "/od-tax/static/js/main.c9c588cf.chunk.js.map",
+    "main.css": "/od-tax/static/css/main.0af9591e.chunk.css",
+    "main.js": "/od-tax/static/js/main.e6df7a5e.chunk.js",
+    "main.js.map": "/od-tax/static/js/main.e6df7a5e.chunk.js.map",
     "runtime-main.js": "/od-tax/static/js/runtime-main.83a012f9.js",
     "runtime-main.js.map": "/od-tax/static/js/runtime-main.83a012f9.js.map",
     "static/js/2.1090c661.chunk.js": "/od-tax/static/js/2.1090c661.chunk.js",
@@ -10,14 +10,14 @@
     "static/js/3.53ba6134.chunk.js": "/od-tax/static/js/3.53ba6134.chunk.js",
     "static/js/3.53ba6134.chunk.js.map": "/od-tax/static/js/3.53ba6134.chunk.js.map",
     "index.html": "/od-tax/index.html",
-    "static/css/main.e6607ef6.chunk.css.map": "/od-tax/static/css/main.e6607ef6.chunk.css.map",
+    "static/css/main.0af9591e.chunk.css.map": "/od-tax/static/css/main.0af9591e.chunk.css.map",
     "static/js/2.1090c661.chunk.js.LICENSE.txt": "/od-tax/static/js/2.1090c661.chunk.js.LICENSE.txt",
     "static/media/index.css": "/od-tax/static/media/LabGrotesqueMono.acc66c61.woff2"
   },
   "entrypoints": [
     "static/js/runtime-main.83a012f9.js",
     "static/js/2.1090c661.chunk.js",
-    "static/css/main.e6607ef6.chunk.css",
-    "static/js/main.c9c588cf.chunk.js"
+    "static/css/main.0af9591e.chunk.css",
+    "static/js/main.e6df7a5e.chunk.js"
   ]
 }
